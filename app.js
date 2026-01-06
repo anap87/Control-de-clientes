@@ -1,3 +1,4 @@
+// ---------------- LOGIN ----------------
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -7,53 +8,79 @@ if (loginForm) {
   });
 }
 
-// Load clients into dashboard
-if (document.getElementById("clientTable")) {
-  fetch("data.json")
-    .then(response => response.json())
-    .then(data => {
-      const table = document.getElementById("clientTable");
+// ---------------- DATA MANAGEMENT ----------------
+function loadClients() {
+  const savedClients = localStorage.getItem("clients");
 
-      data.clients.forEach(client => {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-          <td>${client.name}</td>
-          <td>${client.sport}</td>
-          <td>${client.status}</td>
-          <td>
-            <button class="view-btn" onclick="viewClient(${client.id})">
-              View
-            </button>
-          </td>
-        `;
-
-        table.appendChild(row);
+  if (savedClients) {
+    return Promise.resolve(JSON.parse(savedClients));
+  } else {
+    return fetch("data.json")
+      .then(response => response.json())
+      .then(data => {
+        localStorage.setItem("clients", JSON.stringify(data.clients));
+        return data.clients;
       });
+  }
+}
+
+// ---------------- DASHBOARD ----------------
+if (document.getElementById("clientTable")) {
+  loadClients().then(clients => {
+    const table = document.getElementById("clientTable");
+    table.innerHTML = "";
+
+    clients.forEach(client => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${client.name}</td>
+        <td>${client.sport}</td>
+        <td>
+          <select onchange="updateStatus(${client.id}, this.value)">
+            <option ${client.status === "Accepted" ? "selected" : ""}>Accepted</option>
+            <option ${client.status === "Pending" ? "selected" : ""}>Pending</option>
+            <option ${client.status === "In progress" ? "selected" : ""}>In progress</option>
+          </select>
+        </td>
+        <td>
+          <button class="view-btn" onclick="viewClient(${client.id})">View</button>
+        </td>
+      `;
+
+      table.appendChild(row);
     });
+  });
+}
+
+function updateStatus(id, newStatus) {
+  const clients = JSON.parse(localStorage.getItem("clients"));
+  const client = clients.find(c => c.id === id);
+
+  if (client) {
+    client.status = newStatus;
+    localStorage.setItem("clients", JSON.stringify(clients));
+  }
 }
 
 function viewClient(id) {
   window.location.href = `client.html?id=${id}`;
 }
 
-// Load individual client profile
+// ---------------- CLIENT PROFILE ----------------
 if (document.getElementById("clientDetails")) {
   const params = new URLSearchParams(window.location.search);
-  const clientId = params.get("id");
+  const clientId = parseInt(params.get("id"));
 
-  fetch("data.json")
-    .then(response => response.json())
-    .then(data => {
-      const client = data.clients.find(c => c.id == clientId);
+  loadClients().then(clients => {
+    const client = clients.find(c => c.id === clientId);
 
-      if (client) {
-        document.getElementById("clientDetails").innerHTML = `
-          <p><strong>Name:</strong> ${client.name}</p>
-          <p><strong>Sport:</strong> ${client.sport}</p>
-          <p><strong>Status:</strong> ${client.status}</p>
-        `;
-      }
-    });
+    if (client) {
+      document.getElementById("clientDetails").innerHTML = `
+        <p><strong>Name:</strong> ${client.name}</p>
+        <p><strong>Sport:</strong> ${client.sport}</p>
+        <p><strong>Status:</strong> ${client.status}</p>
+      `;
+    }
+  });
 }
-
