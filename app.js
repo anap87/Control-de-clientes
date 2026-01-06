@@ -67,6 +67,35 @@ function viewClient(id) {
   window.location.href = `client.html?id=${id}`;
 }
 
+// ---------------- ADD CLIENT ----------------
+const addClientForm = document.getElementById("addClientForm");
+
+if (addClientForm) {
+  addClientForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const sport = document.getElementById("sport").value;
+    const status = document.getElementById("status").value;
+
+    const clients = JSON.parse(localStorage.getItem("clients"));
+
+    const newClient = {
+      id: Date.now(),
+      name,
+      sport,
+      status
+    };
+
+    clients.push(newClient);
+    localStorage.setItem("clients", JSON.stringify(clients));
+
+    addClientForm.reset();
+    location.reload();
+  });
+}
+
+
 // ---------------- CLIENT PROFILE ----------------
 if (document.getElementById("clientDetails")) {
   const params = new URLSearchParams(window.location.search);
