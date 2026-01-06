@@ -92,6 +92,19 @@ function updateStatus(id, newStatus) {
   });
 }
 
+function deleteClient(id) {
+  const confirmDelete = confirm("Are you sure you want to delete this client?");
+
+  if (!confirmDelete) return;
+
+  loadClients().then(clients => {
+    const updatedClients = clients.filter(client => client.id !== id);
+    saveClients(updatedClients);
+    location.reload();
+  });
+}
+
+
 // ---------------- ADD CLIENT ----------------
 const addClientForm = document.getElementById("addClientForm");
 
