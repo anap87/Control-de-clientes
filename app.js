@@ -34,3 +34,24 @@ if (document.getElementById("clientTable")) {
 function viewClient(id) {
   window.location.href = `client.html?id=${id}`;
 }
+
+// Load individual client profile
+if (document.getElementById("clientDetails")) {
+  const params = new URLSearchParams(window.location.search);
+  const clientId = params.get("id");
+
+  fetch("data.json")
+    .then(response => response.json())
+    .then(data => {
+      const client = data.clients.find(c => c.id == clientId);
+
+      if (client) {
+        document.getElementById("clientDetails").innerHTML = `
+          <p><strong>Name:</strong> ${client.name}</p>
+          <p><strong>Sport:</strong> ${client.sport}</p>
+          <p><strong>Status:</strong> ${client.status}</p>
+        `;
+      }
+    });
+}
+
