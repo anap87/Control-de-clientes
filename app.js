@@ -97,12 +97,14 @@ if (addClientForm) {
 
 
 // ---------------- CLIENT PROFILE ----------------
+let currentClientId = null;
+
 if (document.getElementById("clientDetails")) {
   const params = new URLSearchParams(window.location.search);
-  const clientId = parseInt(params.get("id"));
+  currentClientId = parseInt(params.get("id"));
 
   loadClients().then(clients => {
-    const client = clients.find(c => c.id === clientId);
+    const client = clients.find(c => c.id === currentClientId);
 
     if (client) {
       document.getElementById("clientDetails").innerHTML = `
@@ -110,6 +112,22 @@ if (document.getElementById("clientDetails")) {
         <p><strong>Sport:</strong> ${client.sport}</p>
         <p><strong>Status:</strong> ${client.status}</p>
       `;
+
+      // Load notes if they exist
+      document.getElementById("clientNotes").value = client.notes || "";
     }
   });
 }
+
+function saveNotes() {
+  const notes = document.getElementById("clientNotes").value;
+  const clients = JSON.parse(localStorage.getItem("clients"));
+
+  const client = clients.find(c => c.id === currentClientId);
+  if (client) {
+    client.notes = notes;
+    localStorage.setItem("clients", JSON.stringify(clients));
+    alert("Notes saved successfully!");
+  }
+}
+
