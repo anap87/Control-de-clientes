@@ -84,6 +84,31 @@ th {
   background-color: #8f1f1b;
 }
 
+.add-client-form {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.add-client-form input,
+.add-client-form select {
+  padding: 8px;
+}
+
+.add-client-form button {
+  background-color: #ad2521;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.add-client-form button:hover {
+  background-color: #8f1f1b;
+}
+
+
 select {
   padding: 6px;
   border-radius: 4px;
