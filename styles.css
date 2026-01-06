@@ -83,3 +83,9 @@ th {
 .view-btn:hover {
   background-color: #8f1f1b;
 }
+
+select {
+  padding: 6px;
+  border-radius: 4px;
+}
+
