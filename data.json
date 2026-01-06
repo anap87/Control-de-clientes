@@ -1,1 +1,41 @@
+{
+  "clients": [
+    {
+      "id": 1,
+      "name": "Chanell Makusu",
+      "sport": "Women Soccer",
+      "status": "Accepted"
+    },
+    {
+      "id": 2,
+      "name": "Amelie Prie",
+      "sport": "Women Soccer",
+      "status": "Accepted"
+    },
+    {
+      "id": 3,
+      "name": "Louis Kruger",
+      "sport": "Men Soccer",
+      "status": "Accepted"
+    },
+    {
+      "id": 4,
+      "name": "Lutho Mkaba",
+      "sport": "Men Soccer",
+      "status": "Pending"
+    },
+    {
+      "id": 5,
+      "name": "Valeria Agudelo",
+      "sport": "Women Soccer",
+      "status": "In progress"
+    },
+    {
+      "id": 6,
+      "name": "Fabian Basulto",
+      "sport": "Men Soccer",
+      "status": "In progress"
+    }
+  ]
+}
 
