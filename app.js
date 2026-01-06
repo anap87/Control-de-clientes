@@ -1,9 +1,11 @@
-document.getElementById("loginForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+const loginForm = document.getElementById("loginForm");
 
-  // Login simple (sin backend por ahora)
-  window.location.href = "dashboard.html";
-});
+if (loginForm) {
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    window.location.href = "dashboard.html";
+  });
+}
 
 // Load clients into dashboard
 if (document.getElementById("clientTable")) {
