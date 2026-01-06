@@ -7,12 +7,24 @@
 </head>
 <body>
 
-  <div class="dashboard-container">
-    <h1>Client Profile</h1>
-    <div id="clientDetails"></div>
-    <br />
-    <button onclick="window.history.back()">← Back</button>
-  </div>
+<div class="dashboard-container">
+  <h1>Client Profile</h1>
+
+  <div id="clientDetails"></div>
+
+  <h3>Notes / Reminders</h3>
+  <textarea
+    id="clientNotes"
+    placeholder="Write notes or reminders here..."
+    rows="6"
+    style="width:100%; padding:10px;"
+  ></textarea>
+
+  <br /><br />
+  <button onclick="saveNotes()">Save Notes</button>
+  <button onclick="window.history.back()">← Back</button>
+</div>
+
 
   <script src="app.js"></script>
 </body>
