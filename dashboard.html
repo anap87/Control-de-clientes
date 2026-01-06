@@ -10,6 +10,23 @@
   <div class="dashboard-container">
     <h1>Client Dashboard</h1>
 
+    <h2>Add New Client</h2>
+
+    <form id="addClientForm" class="add-client-form">
+      <input type="text" id="name" placeholder="Client Name" required />
+      <input type="text" id="sport" placeholder="Sport" required />
+    
+      <select id="status">
+        <option>Applied</option>
+        <option>In progress</option>
+        <option>Accepted</option>
+        <option>Pending</option>
+      </select>
+    
+      <button type="submit">Add Client</button>
+    </form>
+
+    
     <table>
       <thead>
         <tr>
