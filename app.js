@@ -26,6 +26,9 @@ function loadClients() {
   });
 }
 
+function saveClients(clients) {
+  localStorage.setItem("clients", JSON.stringify(clients));
+}
 
 // ---------------- DASHBOARD ----------------
 if (document.getElementById("clientTable")) {
@@ -73,7 +76,6 @@ if (document.getElementById("clientTable")) {
   });
 }
 
-
 function viewClient(id) {
   localStorage.setItem("selectedClientId", id);
   window.location.href = "client.html";
@@ -81,12 +83,11 @@ function viewClient(id) {
 
 function updateStatus(id, newStatus) {
   loadClients().then(clients => {
-    const index = clients.findIndex(c => c.id === id);
-
-    if (index !== -1) {
-      clients[index].status = newStatus;
+    const client = clients.find(c => c.id === id);
+    if (client) {
+      client.status = newStatus;
       saveClients(clients);
-      location.reload(); // fuerza reorden + color
+      location.reload(); // reorden + color
     }
   });
 }
@@ -102,33 +103,28 @@ if (addClientForm) {
     const sport = document.getElementById("sport").value;
     const status = document.getElementById("status").value;
 
-    const clients = JSON.parse(localStorage.getItem("clients"));
+    loadClients().then(clients => {
+      const newClient = {
+        id: Date.now(),
+        name,
+        sport,
+        status
+      };
 
-    const newClient = {
-      id: Date.now(),
-      name,
-      sport,
-      status
-    };
-
-    clients.push(newClient);
-    localStorage.setItem("clients", JSON.stringify(clients));
-
-    addClientForm.reset();
-    location.reload();
+      clients.push(newClient);
+      saveClients(clients);
+      addClientForm.reset();
+      location.reload();
+    });
   });
 }
 
-
 // ---------------- CLIENT PROFILE ----------------
-let currentClientId = null;
-
 if (document.getElementById("clientDetails")) {
-  const params = new URLSearchParams(window.location.search);
-  currentClientId = parseInt(params.get("id"));
+  const clientId = localStorage.getItem("selectedClientId");
 
   loadClients().then(clients => {
-    const client = clients.find(c => c.id === currentClientId);
+    const client = clients.find(c => c.id == clientId);
 
     if (client) {
       document.getElementById("clientDetails").innerHTML = `
@@ -136,22 +132,14 @@ if (document.getElementById("clientDetails")) {
         <p><strong>Sport:</strong> ${client.sport}</p>
         <p><strong>Status:</strong> ${client.status}</p>
       `;
-
-      // Load notes if they exist
-      document.getElementById("clientNotes").value = client.notes || "";
     }
+
+    const notesBox = document.getElementById("clientNotes");
+    notesBox.value = localStorage.getItem(`notes_${clientId}`) || "";
+
+    notesBox.addEventListener("input", () => {
+      localStorage.setItem(`notes_${clientId}`, notesBox.value);
+    });
   });
-}
-
-function saveNotes() {
-  const notes = document.getElementById("clientNotes").value;
-  const clients = JSON.parse(localStorage.getItem("clients"));
-
-  const client = clients.find(c => c.id === currentClientId);
-  if (client) {
-    client.notes = notes;
-    localStorage.setItem("clients", JSON.stringify(clients));
-    alert("Notes saved successfully!");
-  }
 }
 
