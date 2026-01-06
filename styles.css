@@ -120,4 +120,24 @@ textarea {
   font-family: Arial, sans-serif;
 }
 
+.view-btn {
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Status colors */
+.view-in-progress {
+  background-color: #007bff; /* blue */
+}
+
+.view-accepted {
+  background-color: #28a745; /* green */
+}
+
+.view-pending {
+  background-color: #fd7e14; /* orange */
+}
 
