@@ -27,10 +27,34 @@ function loadClients() {
 // ---------------- DASHBOARD ----------------
 if (document.getElementById("clientTable")) {
   loadClients().then(clients => {
+
+    // ORDER clients: In progress → Accepted → Pending
+    const statusOrder = {
+      "In progress": 1,
+      "Accepted": 2,
+      "Pending": 3
+    };
+
+    clients.sort((a, b) => {
+      return (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
+    });
+
     const table = document.getElementById("clientTable");
     table.innerHTML = "";
 
     clients.forEach(client => {
+      let buttonClass = "";
+
+      if (client.status === "In progress") {
+        buttonClass = "view-btn view-in-progress";
+      } else if (client.status === "Accepted") {
+        buttonClass = "view-btn view-accepted";
+      } else if (client.status === "Pending") {
+        buttonClass = "view-btn view-pending";
+      } else {
+        buttonClass = "view-btn";
+      }
+
       const row = document.createElement("tr");
 
       row.innerHTML = `
@@ -44,7 +68,9 @@ if (document.getElementById("clientTable")) {
           </select>
         </td>
         <td>
-          <button class="view-btn" onclick="viewClient(${client.id})">View</button>
+          <button class="${buttonClass}" onclick="viewClient(${client.id})">
+            View
+          </button>
         </td>
       `;
 
@@ -53,19 +79,6 @@ if (document.getElementById("clientTable")) {
   });
 }
 
-function updateStatus(id, newStatus) {
-  const clients = JSON.parse(localStorage.getItem("clients"));
-  const client = clients.find(c => c.id === id);
-
-  if (client) {
-    client.status = newStatus;
-    localStorage.setItem("clients", JSON.stringify(clients));
-  }
-}
-
-function viewClient(id) {
-  window.location.href = `client.html?id=${id}`;
-}
 
 // ---------------- ADD CLIENT ----------------
 const addClientForm = document.getElementById("addClientForm");
