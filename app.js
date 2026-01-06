@@ -10,19 +10,22 @@ if (loginForm) {
 
 // ---------------- DATA MANAGEMENT ----------------
 function loadClients() {
-  const savedClients = localStorage.getItem("clients");
+  return new Promise(resolve => {
+    const storedClients = localStorage.getItem("clients");
 
-  if (savedClients) {
-    return Promise.resolve(JSON.parse(savedClients));
-  } else {
-    return fetch("data.json")
-      .then(response => response.json())
-      .then(data => {
-        localStorage.setItem("clients", JSON.stringify(data.clients));
-        return data.clients;
-      });
-  }
+    if (storedClients) {
+      resolve(JSON.parse(storedClients));
+    } else {
+      fetch("clients.json")
+        .then(res => res.json())
+        .then(data => {
+          localStorage.setItem("clients", JSON.stringify(data.clients));
+          resolve(data.clients);
+        });
+    }
+  });
 }
+
 
 // ---------------- DASHBOARD ----------------
 if (document.getElementById("clientTable")) {
@@ -78,15 +81,15 @@ function viewClient(id) {
 
 function updateStatus(id, newStatus) {
   loadClients().then(clients => {
-    const client = clients.find(c => c.id === id);
-    if (client) {
-      client.status = newStatus;
+    const index = clients.findIndex(c => c.id === id);
+
+    if (index !== -1) {
+      clients[index].status = newStatus;
       saveClients(clients);
-      location.reload(); // 🔥 recarga para reordenar y recolorear
+      location.reload(); // fuerza reorden + color
     }
   });
 }
-
 
 // ---------------- ADD CLIENT ----------------
 const addClientForm = document.getElementById("addClientForm");
