@@ -28,43 +28,35 @@ function loadClients() {
 if (document.getElementById("clientTable")) {
   loadClients().then(clients => {
 
-    // ORDER clients: In progress → Accepted → Pending
     const statusOrder = {
       "In progress": 1,
       "Accepted": 2,
       "Pending": 3
     };
 
-    clients.sort((a, b) => {
-      return (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
-    });
+    clients.sort((a, b) =>
+      (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99)
+    );
 
     const table = document.getElementById("clientTable");
     table.innerHTML = "";
 
     clients.forEach(client => {
-      let buttonClass = "";
+      let buttonClass = "view-btn";
 
-      if (client.status === "In progress") {
-        buttonClass = "view-btn view-in-progress";
-      } else if (client.status === "Accepted") {
-        buttonClass = "view-btn view-accepted";
-      } else if (client.status === "Pending") {
-        buttonClass = "view-btn view-pending";
-      } else {
-        buttonClass = "view-btn";
-      }
+      if (client.status === "In progress") buttonClass += " view-in-progress";
+      if (client.status === "Accepted") buttonClass += " view-accepted";
+      if (client.status === "Pending") buttonClass += " view-pending";
 
       const row = document.createElement("tr");
-
       row.innerHTML = `
         <td>${client.name}</td>
         <td>${client.sport}</td>
         <td>
           <select onchange="updateStatus(${client.id}, this.value)">
+            <option ${client.status === "In progress" ? "selected" : ""}>In progress</option>
             <option ${client.status === "Accepted" ? "selected" : ""}>Accepted</option>
             <option ${client.status === "Pending" ? "selected" : ""}>Pending</option>
-            <option ${client.status === "In progress" ? "selected" : ""}>In progress</option>
           </select>
         </td>
         <td>
@@ -73,9 +65,25 @@ if (document.getElementById("clientTable")) {
           </button>
         </td>
       `;
-
       table.appendChild(row);
     });
+  });
+}
+
+
+function viewClient(id) {
+  localStorage.setItem("selectedClientId", id);
+  window.location.href = "client.html";
+}
+
+function updateStatus(id, newStatus) {
+  loadClients().then(clients => {
+    const client = clients.find(c => c.id === id);
+    if (client) {
+      client.status = newStatus;
+      saveClients(clients);
+      location.reload(); // 🔥 recarga para reordenar y recolorear
+    }
   });
 }
 
