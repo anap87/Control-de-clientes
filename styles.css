@@ -141,3 +141,16 @@ textarea {
   background-color: #fd7e14; /* orange */
 }
 
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.delete-btn:hover {
+  opacity: 0.85;
+}
