@@ -69,7 +69,12 @@ if (document.getElementById("clientTable")) {
           <button class="${buttonClass}" onclick="viewClient(${client.id})">
             View
           </button>
+        
+          <button class="delete-btn" onclick="deleteClient(${client.id})">
+            Delete
+          </button>
         </td>
+
       `;
       table.appendChild(row);
     });
